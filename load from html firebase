@@ -1,0 +1,51 @@
+using UnityEngine;
+using System.Collections;
+using System.IO;
+using System;
+using UnityEngine.Networking;
+
+public class Qwerty : MonoBehaviour {
+
+	string nameOfAssetBundle = "1";
+	string nameOfObjectToLoad = "New Prefab";
+
+	// // Use this for initialization
+	// void Start () {
+	
+	// 	StartCoroutine (load (soundAsset));
+	// }
+
+
+	public string url = "https://firebasestorage.googleapis.com/v0/b/arapp-ba619.appspot.com/o/AssetBundles%2F1?alt=media&token=268af11d-30fd-40df-85d9-1f0ab74229fd";
+    IEnumerator Start()
+    {
+        using (WWW www = new WWW(url))
+        {
+            yield return www;
+
+			Debug.Log ("Loaded ");
+       		//Statustext.text = "Loaded";
+        	if (www.error != null)
+            throw new Exception ("WWW download had an error: " + www.error);
+
+			AssetBundle asseBundle = www.assetBundle;
+      
+      //Load asset object reference: "New Prefab": Real Name of Obejct Asset Bundled!!
+			AssetBundleRequest asset = asseBundle.LoadAssetAsync<GameObject>(nameOfObjectToLoad);
+			yield return asset;
+
+			GameObject loadedAsset = asset.asset as GameObject;
+			//Do something with the loaded loadedAsset  object
+			//Instantiate(asseBundle.mainAsset);
+			//asset.localScale += new Vector3(3, 3, 3);
+      
+      //Instanciate object reference: "New Prefab": Real Name of Obejct Asset Bundled!!
+			Instantiate(asseBundle.LoadAsset(nameOfObjectToLoad));
+        }
+    }
+
+	// Update is called once per frame
+	void Update () {
+		
+	}
+}
